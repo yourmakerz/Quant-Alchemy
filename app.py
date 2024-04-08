@@ -6,15 +6,21 @@ from fastapi.staticfiles import StaticFiles
 
 
 templates = Jinja2Templates(directory="templates")
-app = FastAPI(debug=True)
+app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name ="static")
 
 @app.get("/")
-def home(request: Request):
+async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request":request})
 
+@app.get("/solutions")
+async def solutions(request:Request):
+    return templates.TemplateResponse("solutions.html",{"request":request})
 
+@app.get("/research")
+async def solutions(request:Request):
+    return templates.TemplateResponse("research.html",{"request":request})
 
-if __name__ == "__main__":
-    import uvicorn 
-    uvicorn.run(app, host="127.0.0.1",port=8000)
+@app.get("/investment")
+async def solutions(request:Request):
+    return templates.TemplateResponse("investment.html",{"request":request})
