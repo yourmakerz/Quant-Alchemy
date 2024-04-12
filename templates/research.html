@@ -26,15 +26,37 @@
 
 
     <div class="row bg-light my-5 mx-2 align-items-center justify-content-center">
-        <form action="/research" method="get">
-            <div class="col-1">
+        <form id="symbolForm" action="/research" method="get">
+            <div class="col-2">
                 <label for="symbol" class="form-label">Ticker Symbol:</label><br>
-                <input type="text" class="form-control" id="symbol" name="symbol"><br>
+                <input type="text" class="form-control" id="symbol" name="symbol" placeholder="Enter one or more symbols separated by commas"><br>
                 <div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </form>
+        
+
+        <script>
+            document.getElementById("symbolForm").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                
+                // Get the input value
+                var symbolInput = document.getElementById("symbol").value;
+                
+                // Log the input to the console
+                console.log("User input:", symbolInput);
+                
+                // Submit the form
+                this.submit();
+            });
+        </script>
+
+
+
+
+
+
         <div class="col-md-5" id="financial_health_chart">
             <h4><b>Financial Health</b></h4>
             <div id="financial_health_graph">
