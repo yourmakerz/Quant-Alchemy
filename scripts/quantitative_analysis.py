@@ -63,11 +63,11 @@ def get_company_data(symbol, duration="quarter"):
     
     # Create data frames
     company_health = {'BVPS': [bvps], 'Cash/share': [cash_share], 'liability_share': [liability_share],
-                      'EPS_ttm': [eps_ttm], 'fq_eps': [fq_eps], 'last': [last], 'industry': [industry]}
-    company_valuation = {'BVPS/Price': [bvps_price], 'P/E': [pe_ttm], 'Inv_Yield': [inv_yield], 'last': [last],
-                         'Current_ratio': [current_ratio], 'Total_Ratio': [total_ratio], 'industry': [industry]}
+                      'EPS_ttm': [eps_ttm], 'fq_eps': [fq_eps],}
+    company_valuation = {'BVPS/Price': [bvps_price], 'P/E': [pe_ttm], 'Inv_Yield': [inv_yield],
+                         'Current_ratio': [current_ratio], 'Total_Ratio': [total_ratio], }
     
     health_df = pd.DataFrame(company_health, index=[symbol])
     valuation_df = pd.DataFrame(company_valuation, index=[symbol])
     
-    return health_df, valuation_df
+    return health_df.T, valuation_df.T

@@ -36,12 +36,12 @@ async def research(request:Request, symbol: Optional[str] = None):
         financial_health, valuation = quantitative_analysis.get_company_data(symbol=symbol)
 
         # Generate bar graphs for financial health and valuation using Plotly
-        financial_health_fig = px.bar(financial_health, x=financial_health.index, y=financial_health.columns[:-1],
-                                    labels={'x': 'Metrics', 'y': 'Values'}, title='Financial Health')
+        financial_health_fig = px.bar(financial_health, x=financial_health.index, y=financial_health.columns,
+                                    labels={'x': 'Metrics', 'y': 'Values'}, title='Financial Health',log_y=True)
         # valuation_fig = px.bar(valuation, x=valuation.columns[:-1], y=valuation.index,
         #                         labels={'x': 'Metrics', 'y': 'Values'}, title='Valuation')
-        valuation_fig = px.bar(valuation, x=valuation.index, y=valuation.columns[:-1],
-                        labels={'x': 'Metrics', 'y': 'Values'}, title='Valuation') 
+        valuation_fig = px.bar(valuation, x=valuation.index, y=valuation.columns,
+                        labels={'x': 'Metrics', 'y': 'Values'}, title='Valuation', log_y=True) 
         # Convert the Plotly bar graphs to HTML code
         financial_health_html = financial_health_fig.to_html(full_html=False)
         valuation_html = valuation_fig.to_html(full_html=False)
