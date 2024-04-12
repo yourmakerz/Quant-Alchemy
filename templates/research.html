@@ -23,6 +23,31 @@
             {{ plot2 | safe }}
         </div>
     </div>
+
+
+    <div class="row bg-light my-5 mx-2 align-items-center justify-content-center">
+        <form action="/research" method="get">
+            <div class="col-1">
+                <label for="symbol" class="form-label">Ticker Symbol:</label><br>
+                <input type="text" class="form-control" id="symbol" name="symbol"><br>
+                <div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+        <div class="col-md-5" id="financial_health_chart">
+            <h4><b>Financial Health</b></h4>
+            <div id="financial_health_graph">
+                {{ financial_health | safe }}
+            </div>
+        </div>
+        <div class="col-md-5" id="valuation_chart">
+            <h4><b>Valuation</b></h4>
+            <div id="valuation_graph">
+                {{ valuation | safe }}
+            </div>
+        </div>
+    </div>
 >
 </body>
 </html>

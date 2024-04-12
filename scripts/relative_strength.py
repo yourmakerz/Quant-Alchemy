@@ -1,17 +1,15 @@
+import pandas as pd, numpy as np, yfinance as yf
+import hvplot.pandas
+# from quantitaive_library import equity_data, concating_stocks
+from .subpackages.daily_data import daily_close_returns ,beta,benchmark_data
+import requests
+import os
+from dotenv import load_dotenv
+import fmpsdk as fmp
+import datetime
+load_dotenv()
+
 def sector_strength():
-    
-    import pandas as pd, numpy as np, yfinance as yf
-    import hvplot.pandas
-    # from quantitaive_library import equity_data, concating_stocks
-    from daily_data import daily_close_returns ,beta,benchmark_data
-    import requests
-    import os
-    from dotenv import load_dotenv
-    import fmpsdk as fmp
-    import datetime
-    
-    
-    load_dotenv()
     fmp_key = os.getenv('fmp_key')
     sectors = ['XLK','XLY','XLC','XLE','XLB','XLP','XLV','XLI']
     closing_prices,returns = daily_close_returns(sectors,per = '5mo')
