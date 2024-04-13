@@ -2,11 +2,11 @@ from typing import Union
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from scripts import relative_strength, quantitative_analysis
+from fastapi.responses import HTMLResponse, JSONResponse
+from scripts import relative_strength, quantitative_analysis, treasuries
 import plotly.graph_objects as go
 import plotly.express as px
 from typing import Union ,List, Optional
-
 
 
 templates = Jinja2Templates(directory="templates")
@@ -63,6 +63,13 @@ async def research(request:Request, symbol: Optional[str] = None):
                                                        "financial_health": financial_health_html,
                                                        "valuation": valuation_html})
 
+
+@app.get("/research/yields", response_class = HTMLResponse)
+async def yields(request: Request):
+    yields_data = treasuries.yields_data()
+    yields_data = yields_data.loc["2000-01-01":]
+
+    return templates.TemplateResponse("yields.html", {"request":request, "yields":yields_data})
 
 @app.get("/investment")
 async def investment(request:Request):
