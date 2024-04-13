@@ -1,6 +1,4 @@
 import pandas as pd, numpy as np, yfinance as yf
-import hvplot.pandas
-# from quantitaive_library import equity_data, concating_stocks
 from .subpackages.daily_data import daily_close_returns ,beta,benchmark_data
 import requests
 import os

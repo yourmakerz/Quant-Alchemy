@@ -6,4 +6,6 @@ import quandl as ql
 
 def yields_data():
     yields = ql.get("USTREASURY/YIELD")
-    return yields
+    yields_data = yields.loc["2000-01-01":]
+    yields_monthly = yields_data.resample("ME").mean()
+    return yields_monthly

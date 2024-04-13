@@ -84,3 +84,30 @@ def get_company_data(symbol, duration="quarter"):
     valuation = pd.concat(valuation_dataframe)
     
     return health, valuation
+
+
+def profitabilty(symbol, duration="quarter"):
+    load_dotenv("./scripts/.env")
+    fmp_key = os.environ.get("FMP_KEY")
+
+    if isinstance(symbol, str):
+            symbols = [symbol]
+    elif isinstance(symbol, list):
+            symbols = symbol
+    else:
+        raise ValueError("Symbol must be a string or a list of strings")
+    # Retrieve company profile
+
+    revenue_data = {}
+    for symbol in symbols:
+        revenue = pd.DataFrame(fmp.income_statement(symbol=symbol, apikey=fmp_key,period="quarter"))[["date","revenue"]]
+        inventory = pd.DataFrame(fmp.cash_flow_statement(symbol=symbol ,apikey=fmp_key,period="quarter"))[['date','inventory']]
+        revenue[symbol] = revenue["revenue"] / inventory["inventory"]
+        revenue_data[symbol] = revenue
+    # data = pd.DataFrame(revenue_data)
+    combined_data = pd.DataFrame()
+    for i, x in revenue_data.items():
+        date = x["date"]
+        combined_data = pd.concat([combined_data, x[[i]]],axis=1,join="outer")
+    combined_data["date"] =  date
+    return combined_data

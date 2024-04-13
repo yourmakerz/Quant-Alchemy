@@ -1,11 +1,12 @@
 from typing import Union
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
 from scripts import relative_strength, quantitative_analysis, treasuries
 import plotly.graph_objects as go
 import plotly.express as px
+from datetime import date
 from typing import Union ,List, Optional
 
 
@@ -45,31 +46,42 @@ async def research(request:Request, symbol: Optional[str] = None):
         print("------------------------------------------")
         print(symbols)
         
-       
+        rev_by_inv = quantitative_analysis.profitabilty(symbol=symbols)       
         financial_health, valuation = quantitative_analysis.get_company_data(symbol=symbols)
 
     # Generate bar graphs for financial health and valuation using Plotly
         financial_health_fig = px.bar(financial_health, x=financial_health.index, y=financial_health.columns,
                                 labels={'x': 'Metrics', 'y': 'Values'}, title='Financial Health',log_y=True, barmode="group")
-    # valuation_fig = px.bar(valuation, x=valuation.columns[:-1], y=valuation.index,
-    #                         labels={'x': 'Metrics', 'y': 'Values'}, title='Valuation')
         valuation_fig = px.bar(valuation, x=valuation.index, y=valuation.columns,
                     labels={'x': 'Metrics', 'y': 'Values'}, title='Valuation', log_y=True,  barmode="group") 
+        revByinv_fig = px.line(rev_by_inv, x="date", y=rev_by_inv.columns,labels={'x': 'Date', 'y': 'Revenue/Inventory'})
     # Convert the Plotly bar graphs to HTML code
         financial_health_html = financial_health_fig.to_html(full_html=False)
         valuation_html = valuation_fig.to_html(full_html=False)
+        revByinv_fig_html = revByinv_fig.to_html(full_html=False)
 
     return templates.TemplateResponse("research.html",{"request":request,"plot1":plot_html1, "plot2":plot_html2,
                                                        "financial_health": financial_health_html,
-                                                       "valuation": valuation_html})
+                                                       "valuation": valuation_html,
+                                                       "RevByInv": revByinv_fig_html})
 
 
-@app.get("/research/yields", response_class = HTMLResponse)
-async def yields(request: Request):
+
+@app.get("/research/yields")
+async def yields(request: Request, selection: date = None):
     yields_data = treasuries.yields_data()
-    yields_data = yields_data.loc["2000-01-01":]
+    print(f"----------------")
+    print(f"{selection}")
+    if selection is None:
+        yield_html = ""
+    else:
+        # selection = selection.strftime("%Y-%m-%d")
+        data = yields_data.loc[[selection]].T
+        fig = px.line(data, x=data.index, y=selection)
+        yield_html = fig.to_html(full_html=False)
+    return templates.TemplateResponse("yields.html", {"request": request, "dates": yields_data.index, "yields_graph":yield_html})
 
-    return templates.TemplateResponse("yields.html", {"request":request, "yields":yields_data})
+
 
 @app.get("/investment")
 async def investment(request:Request):
